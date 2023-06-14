@@ -1,0 +1,236 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Poster une annonce{% endblock %}
+
+{% block body %}
+
+<main>
+
+    <div class="p-5 bg-light rounded-3">
+
+        <div class="container-fluid py-5">
+
+            <h2 class="h1 text-center display-3 fw-bold">Vendez votre bien immobilier en direct&nbsp;!</h2>
+
+            <ul class="list-unstyled text-center">
+                <li>Vous êtes un particulier à Toulouse ou dans la métropole toulousaine.</li>
+                <li>Vous souhaitez vendre votre bien immobilier sans commission.</li>
+                <li>Nous vous mettons en relation avec des acheteurs potentiels.</li>
+                <li>L'inscription est gratuite.</li>
+            </ul>
+
+            <div class="d-grid gap-3 col-6 mx-auto">
+                <button class="btn btn-danger btn-lg mt-3" onclick="location.href='{{path('products_new_post')}}'" type="button">Je mets mon bien en vente</button>
+                <a class="text-center"href="{{path('app_register')}}">Pas encore inscrit ? Cliquez ici</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-5 mb-4 rounded-3 " style="page-break-inside: avoid;">
+
+        <div class="container-fluid py-5">
+
+            <h2 class="display-5 fw-bold">Faisons un rapide calcul.</h2>
+
+            <div class="mb-3">
+                <label for="budget" class="form-label">Quelle est l'estimation de votre bien ?</label>
+
+                <div class="row">
+                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                        <div class="input-group">
+                            <input type="number" class="form-control budget-input" id="budget" name="budget">
+                            <div class="input-group-append">
+                                <span class="input-group-text">&euro;</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3" id="result"></div>
+
+        </div>
+    </div>
+
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid pt-5">
+            <h2 class="display-5 fw-bold">Comment ça marche ?</h2>
+
+            <div class="container px-4 pb-5">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-5">
+
+                    <div class="col d-flex align-items-start">
+                        <i class="fab fa-creative-commons-nc-eu fa-lg me-1"></i>
+                        <div>
+                            <h4 class="fw-bold mb-0">Pas de commission</h4>
+                            <p>Aucun engagement. Vous êtes l'agent immobilier&nbsp;!</p>
+                        </div>
+                    </div>
+
+                    <div class="col d-flex align-items-start">
+                        <i class="far fa-calendar-alt fa-lg me-1"></i>
+                        <div>
+                            <h4 class="fw-bold mb-0">Réservation de visite en ligne</h4>
+                            <p>Planifiez des visites avec les acheteurs potentiels directement sur notre site.</p>
+                        </div>
+                    </div>
+
+                    <div class="col d-flex align-items-start">
+                        <i class="far fa-envelope me-1"></i>
+                        <div>
+                            <h4 class="fw-bold mb-0">Relances emails automatiques</h4>
+                            <p>Envoyez des rappels avant chaque visite et en cas d'informations manquantes.</p>
+                        </div>
+                    </div>
+
+                    <div class="col d-flex align-items-start">
+                        <i class="far fa-handshake fa-lg me-1"></i>
+                        <div>
+                            <h4 class="fw-bold mb-0">Offre d'achat</h4>
+                            <p>Recevez des offres d'achat directement sur notre site.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="have_questions col">
+                <div class="text ">
+                    <div class="help">Vous avez des questions ? Nous pouvons vous aider.</div>
+                    <div>Notre service client est disponible du lundi au vendredi, de 9h30 à 19h.</div>
+                </div>
+
+                <div class="text-center">
+                            <button type="button" class="btn btn-dark mt-3" onclick="location.href='#'">Nous contacter</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</main>
+
+<script>
+
+
+let budgetInput;
+
+function initCommissionCalculator() {
+  budgetInput = document.getElementById('budget');
+
+  // Supprimer l'écouteur d'événements 'input'
+  budgetInput.removeEventListener('input', calculateCommission);
+
+  // Ajouter un écouteur d'événement 'blur'
+  budgetInput.addEventListener('blur', () => {
+    const budget = parseInt(budgetInput.value);
+    if (!isNaN(budget) && budget > 0) {
+      calculateCommission();
+    }
+  });
+
+  budgetInput.addEventListener('keyup', function(event) {
+  if (event.key === 'Enter') {
+    calculateCommission();
+  }
+});
+}
+
+function calculateCommission() {
+  console.log('calculateCommission called');
+  const budget = parseInt(budgetInput.value);
+  if (isNaN(budget) || budget <= 0) {
+    return;
+  }
+
+  const typeAgents = ['exclusif', 'classique', 'mandataire'];
+  const commissions = [];
+  const delaisVenteFormatted = [];
+
+  for (let i = 0; i < typeAgents.length; i++) {
+    let commissionPercentage = 0;
+    let delaiVente = 0;
+
+    switch(typeAgents[i]) {
+      case 'exclusif':
+        commissionPercentage = 0.05;
+        delaiVente = 90;
+        break;
+      case 'classique':
+        commissionPercentage = 0.06;
+        delaiVente = 120;
+        break;
+      case 'mandataire':
+        commissionPercentage = 0.04;
+        delaiVente = 150;
+        break;
+      default:
+        commissionPercentage = 0;
+        delaiVente = 0;
+        break;
+    }
+
+    const commission = Math.trunc(budget * commissionPercentage); // Récupère l'entier correspondant à la commission
+    const commissionFormatted = new Intl.NumberFormat('fr-FR', {style: 'currency', currency: 'EUR', minimumFractionDigits: 0}).format(commission);
+
+    commissions.push(commissionFormatted);
+    delaisVenteFormatted.push(`${delaiVente} jours`);
+  }
+
+  const resultElement = document.getElementById('result');
+  if (resultElement) {
+    resultElement.innerHTML = `
+      <table class="table table-striped table-sm">
+  <thead>
+    <tr>
+      <th>Type d'agent immobilier</th>
+      <th>Délai de vente estimé</th>
+      <th>Commission</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Exclusif</td>
+      <td>${delaisVenteFormatted[0]}</td>
+      <td>${commissions[0]}</td>
+    </tr>
+    <tr>
+      <td>Classique</td>
+      <td>${delaisVenteFormatted[1]}</td>
+      <td>${commissions[1]}</td>
+    </tr>
+    <tr>
+      <td>Mandataire</td>
+      <td>${delaisVenteFormatted[2]}</td>
+      <td>${commissions[2]}</td>
+    </tr>
+  </tbody>
+</table>
+<h2 class="display-6 fw-bold">En vendant votre bien en direct</h2>
+<h3 class="display-7 fw-bold">vous pouvez économiser jusqu'à: ${commissions[1]} de frais de commission.</h3>
+<div class="d-grid gap-3 col-6 mx-auto">
+<button class="btn btn-danger btn-lg mt-3" onclick="location.href='{{path('products_new_post')}}'" type="button">Je mets mon bien à vendre</button>
+</div>
+    `;
+  }
+}
+
+window.addEventListener('load', () => {
+  console.log('Page loaded');
+  budgetInput = document.getElementById('budget');
+  budgetInput.value = '';
+  const resultElement = document.getElementById('result');
+  if (resultElement) {
+    resultElement.innerHTML = '';
+  }
+
+  // Initialiser l'application
+  initCommissionCalculator();
+});
+
+
+</script>
+
+{% endblock %}
+

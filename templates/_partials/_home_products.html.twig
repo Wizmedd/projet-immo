@@ -1,0 +1,55 @@
+
+
+            {% for property in products %}
+
+            <div class="col">
+
+                <div class="custom-card">
+                    <div class="card-body d-flex flex-column ">
+
+                      <div id="carouselExampleIndicators{{property.id}}" class="carousel slide carousel-fade"  data-bs-touch="false" data-bs-interval="false">
+                    {% if property.images is not empty %}
+                    <div class="carousel-indicators">
+                        {% for iteration in 1..property.images|length %}
+                            <button type="button" data-bs-target="#carouselExampleIndicators{{property.id}}" data-bs-slide-to="{{ iteration - 1 }}" {{ (loop.first ) ?'class="active" aria-current="true"' : '' }} aria-label="Slide {{ iteration }}"></button>
+                        {% endfor %}
+                    </div>
+
+
+
+                    <div class="carousel-inner">
+                        {% for image in property.images %}
+                            <div class="carousel-item {{ (loop.first ) ? 'active' : '' }}" >
+                                <img src="{{ asset(('assets/uploads/') ~ image.name) | imagine_filter('thumb') }}" id="main_product_image" class="rounded-5" style="height:154px; width:100%"  alt="{{ property.title }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators{{property.id}}" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators{{property.id}}" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+    {% else %}
+        <img src="{{ asset('assets/images/wait.jpg') | imagine_filter('thumb') }}" alt="{{ property.title }}" class="card-img-top">
+    {% endif %}
+
+                </div>
+
+                        <h5 class="card-title mb-1">
+                            <a
+                                href="{{ path('products_details', {slug: property.slug}) }}">{{ property.categories.name }}, T{{ property.rooms }} - {{ property.surface }}m²   </a>
+
+                        </h5>
+                        <h6 class="mb-1">{{ property.bedrooms }} chambres</h6>
+                          <p class="card-text mb-1">{{ property.city }} ({{ property.zipCode }})</p>                    <div class="text-muted" style="font-weight: bold; font-size: 1em;">
+                            {{ property.formattedPrice() }} €
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            {% endfor %}

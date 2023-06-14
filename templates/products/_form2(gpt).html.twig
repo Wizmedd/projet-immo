@@ -1,0 +1,74 @@
+{{ form_start(productForm, {'attr': {'class': 'needs-validation', 'novalidate': ''}}) }}
+
+<h2>Informations générales</h2>
+
+<div class="row g-3 mb-4">
+<div class="col-lg-8">
+{{ form_row(productForm.title, {'attr': {'class': 'form-control form-control-lg', 'placeholder': 'Titre de votre annonce'}}) }}
+{{ form_row(productForm.description, {'attr': {'class': 'form-control', 'placeholder': 'Description de votre bien'}}) }}
+{{ form_row(productForm.price, {'attr': {'class': 'form-control', 'placeholder': 'Prix en euros'}}) }}
+</div>
+<div class="col-lg-4">
+<h6>Catégories :</h6>
+{{ form_row(productForm.categories, {'attr': {'class': 'form-select'}}) }}
+</div>
+</div>
+
+<div class="row g-3 mb-4">
+<div class="col-md-4">
+{{ form_row(productForm.surface, {'attr': {'class': 'form-control', 'placeholder': 'Surface en m²'}}) }}
+</div>
+<div class="col-md-4">
+{{ form_row(productForm.rooms, {'attr': {'class': 'form-control', 'placeholder': 'Nombre de pièces'}}) }}
+</div>
+<div class="col-md-4">
+{{ form_row(productForm.bedrooms, {'attr': {'class': 'form-control', 'placeholder': 'Nombre de chambres'}}) }}
+</div>
+</div>
+
+<h2>Localisation de votre bien</h2>
+
+<div class="row g-3 mb-4">
+<div class="col-lg-8">
+{{ form_row(productForm.address, {'attr': {'class': 'form-control', 'placeholder': 'Adresse'}}) }}
+</div>
+<div class="col-lg-4">
+{{ form_row(productForm.zipcode, {'attr': {'class': 'form-control', 'placeholder': 'Code postal'}}) }}
+</div>
+</div>
+
+<div id="detailsMap" class="mb-4"></div>
+
+<h2>Spécificités du bien</h2>
+
+<div class="row g-3 mb-4">
+<div class="col-md-6">
+{{ form_row(productForm.heat, {'attr': {'class': 'form-select'}}) }}
+</div>
+<div class="col-md-6">
+{{ form_row(productForm.floor, {'attr': {'class': 'form-select'}}) }}
+</div>
+</div>
+
+<div class="row g-3 mb-4">
+<div class="col-md-12">
+{{ form_row(productForm.options, {'attr': {'class': 'form-control', 'placeholder': 'Autres spécificités (ex : terrasse, piscine)'}}) }}
+</div>
+</div>
+
+<h2>Images du bien</h2>
+
+<div class="row g-3 mb-4">
+<div id="preview" class="d-flex flex-wrap align-items-center justify-content-center mb-3"></div>
+<div class="col-md-12">
+{{ form_row(productForm.images, {'attr': {'class': 'form-control', 'accept': 'image/*', 'multiple': true, 'max': 3}}) }}
+{{ form_errors(productForm.images) }}
+<button type="button" class="btn btn-secondary mt-3" onclick="clearPreviewImages()">Effacer les aperçus</button>
+</div>
+</div>
+
+<div class="d-flex justify-content-center">
+<button type="submit" class="btn-lg btn-danger my-3">Publier mon annonce</button>
+</div>
+
+{{ form_end(productForm) }}

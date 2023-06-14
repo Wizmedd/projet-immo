@@ -1,0 +1,17 @@
+  <div class="col">
+                    <div class="count fw-normal mt-1">
+                    {# total items count #}
+                    <mark class="fs-4 rounded-pill" style="background-color:black;color:white">{{ products.getTotalItemCount }}</mark>
+                    {% if products.getTotalItemCount <= 1 %} bien à la vente disponible
+                    {% else %}biens à la vente disponible
+                    {% endif %}
+
+                    </div>
+                </div>
+                <div class="col d-flex justify-content-end">
+                    <button class=" btn btn-sm btn-outline-dark rounded-pill mt-2 mx-1" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-sliders-h"></i> Filtres </button>
+
+                   {# {{knp_pagination_sortable(products,'Date','p.created_at')}}#}
+                    {{knp_pagination_sortable(products,'Surface','p.surface')}}
+                    {{knp_pagination_sortable(products,'Prix','p.price')}}
+                </div>

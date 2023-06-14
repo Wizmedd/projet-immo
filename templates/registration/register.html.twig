@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <main class="form-signin text-center">
+        <span class="mb-4 text-primary"  ><i class="fab fa-fly fa-4x" ></i></span>
+        <h1 class="h3 fw-normal">M'inscrire</h1>
+
+                {{ form_start(registrationForm) }}
+
+                    <div class="form-floating">
+                        {{ form_row(registrationForm.lastname, {'attr': {'placeholder': 'Votre nom','class': 'form-control'}}) }}
+
+                    </div>
+                        {{ form_row(registrationForm.firstname, {'attr': {'placeholder':'Votre prénom'}}) }}
+
+                         <div class="form-floating">
+                        {{ form_row(registrationForm.email, {'attr': {'placeholder':'Votre Email'}}) }}
+
+                        </div>
+
+
+
+                    {{ form_row(registrationForm.plainPassword, {
+                        'attr': {'placeholder':'Mot de passe'}
+                    }) }}
+
+
+                    {{ form_row(registrationForm.RGPDConsent, {'attr': {'class': 'foo'}}) }}
+
+
+                {{ form_end(registrationForm) }}
+                <button type="submit" class="w-100 btn btn-primary btn-lg my-3">M'inscrire</button>
+                    <a href="{{ path('app_login') }}">Me connecter</a>
+
+
+
+
+
+    <p class="mt-5 mb-5 text-muted">© Imm'haut 2022</p>
+  </form>
+</main>
+
+{% endblock %}

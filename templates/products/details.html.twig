@@ -1,0 +1,472 @@
+{% extends "base.html.twig" %}
+{% block stylesheets %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css">
+ <link rel="stylesheet" href="{{ asset('assets/css/Control.FullScreen.css') }}" />
+{% endblock %}
+{% block title %}Détails de
+    {{ product.title }}
+{% endblock %}
+
+{% block body %}
+
+
+<main class="container-fluid" >
+
+
+    <div class="container mt-3  ">
+        <div class="">
+            <div class="row g-0 border-bottom">
+                <div class="col-md-7 border-end">
+                    <div class="d-flex flex-column justify-content-center p-3">
+                        <div id="carouselExampleIndicators" class="mb-1 carousel slide carousel-fade"  data-bs-touch="false" data-bs-interval="false">
+                            <div class="carousel-indicators">
+                                {% for iteration in 1..product.images|length %}
+                                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ iteration - 1 }}" {{ (loop.first ) ?'class="active" aria-current="true"' : '' }} aria-label="Slide {{ iteration }}"></button>
+                                {% endfor %}
+                            </div>
+                            <div class="carousel-inner">
+                                {% for image in product.images %}
+
+                                    <div class="carousel-item {{ (loop.first ) ? 'active' : '' }}">
+
+                                        <img src="{{ asset(('/assets/uploads/') ~ image.name ) | imagine_filter('medium')}}" id="main_product_image" class=" img-fluid rounded-5 shadow-lg" alt="{{ product.title }}" />
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+
+
+
+                            <div class="d-flex justify-content-between align-items-center" style="">
+                                <h3 class="h6">
+                                    {% set now = "now"|date('Y-m-d') %}
+                                        {% if product.createdAt|date('Y-m-d') >= now|date_modify('-15 days')|date('Y-m-d') %}
+                                            <span class="badge rounded-pill bg-warning">Nouveau</span>
+                                        {% endif %}
+
+                                    <div class="text-secondary fw-bold fs-5 lh-1.2 text-wrap">
+                                    {{ product.categories.parent.name }} {{ product.categories.name }}, T{{ product.rooms }} de {{ product.surface }} m²
+                                    </div>
+                                </h3>
+
+                                <span class="heart"><h5 class="love mb-0" data-bs-toggle="popover" data-bs-placement="right" data-bs-trigger="hover focus" data-bs-html="true" title="Un coup de coeur !" data-bs-content="Ajoutez le en favoris"><i class="far fa-heart"></i></h5></span>
+
+                            </div>
+
+                            <div class="row">
+                                <ul class="d-flex list-unstyled mb-0 d-inline" style="color:grey">
+
+                                    <li class="d-flex align-items-center me-3 js-quator">
+                                    <svg class="svg-inline--fa fa-map-pin fa-w-9 bi me-2" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="map-pin" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 512" data-fa-i2svg=""><path fill="currentColor" d="M112 316.94v156.69l22.02 33.02c4.75 7.12 15.22 7.12 19.97 0L176 473.63V316.94c-10.39 1.92-21.06 3.06-32 3.06s-21.61-1.14-32-3.06zM144 0C64.47 0 0 64.47 0 144s64.47 144 144 144 144-64.47 144-144S223.53 0 144 0zm0 76c-37.5 0-68 30.5-68 68 0 6.62-5.38 12-12 12s-12-5.38-12-12c0-50.73 41.28-92 92-92 6.62 0 12 5.38 12 12s-5.38 12-12 12z"></path></svg><!-- <i class="fas fa-map-pin bi me-2"></i> -->
+                                    Carmes
+                                    </li>
+                                    <li class="d-flex align-items-center js-city">
+                                    <svg class="svg-inline--fa fa-map fa-w-18 bi me-2" aria-hidden="true" focusable="false" data-prefix="far" data-icon="map" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M560.02 32c-1.96 0-3.98.37-5.96 1.16L384.01 96H384L212 35.28A64.252 64.252 0 0 0 191.76 32c-6.69 0-13.37 1.05-19.81 3.14L20.12 87.95A32.006 32.006 0 0 0 0 117.66v346.32C0 473.17 7.53 480 15.99 480c1.96 0 3.97-.37 5.96-1.16L192 416l172 60.71a63.98 63.98 0 0 0 40.05.15l151.83-52.81A31.996 31.996 0 0 0 576 394.34V48.02c0-9.19-7.53-16.02-15.98-16.02zM224 90.42l128 45.19v285.97l-128-45.19V90.42zM48 418.05V129.07l128-44.53v286.2l-.64.23L48 418.05zm480-35.13l-128 44.53V141.26l.64-.24L528 93.95v288.97z"></path></svg><!-- <i class="far fa-map bi me-2"></i> -->
+                                    Toulouse centre
+                                    </li>
+                                    <li class="d-flex align-items-center">
+                                    , {{product.zipCode}}
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-primary" style="font-weight: bold; font-size: 1.5em;">
+                                    {{ product.formattedPrice() }} € <small class="fs-6" style="color:grey">{{ product.price  // product.surface }} €/m²</small>
+
+                                </div>
+                                <div class="ratings d-flex flex-row align-items-center">
+                                    <div class="d-flex flex-row">
+                                    <i class='bx bxs-star' ></i>	<i class='bx bxs-star' ></i>	<i class='bx bxs-star' ></i>	<i class='bx bxs-star' ></i>	<i class='bx bx-star' ></i>
+                                    </div>
+                                    <span class="text-muted">{{ product.createdAt|date("d/m/Y") }}</span>
+                                </div>
+                            </div>
+                            <div class="mt-2 pr-3 content">	<p>{{ product.description }}</p>
+
+
+                            </div>
+                        </div>
+                    </div>
+                <div class="col-md-5">
+                    <div class="p-3 right-side">
+
+
+                <div class="gallery ">
+            {% for index, image in product.images %}
+  <div class="thumbnail">
+    <img onclick="changeImage(this, {{ index }})" src="{{ asset(('assets/uploads/') ~ image.name) | imagine_filter('mini')}}" class="img-fluid rounded-2" alt="{{ product.title }}"/>
+  </div>
+{% endfor %}
+
+
+
+                </div>
+
+{#
+                         <div class="row">
+                        <div class="thumbnail_images border-bottom">
+
+                            <ul id="thumbnail">
+                            {% for image in product.images %}
+                            <li>
+                                <img onclick="changeImage(this)" src="{{ asset('assets/uploads/') ~ image.name }}" width="70" alt="{{ product.title }}">
+                           </li>
+                        {% endfor %}
+                            </ul>
+
+
+
+
+                        </div>
+                        </div>
+#}
+
+                        <div class="container mt-1"> <span class="fw-bold">Critères:</span>
+                        </div>
+
+
+                        <div class="container">
+                            <div class="row text-center p-2 bg-light border-bottom" style="font-size: 0.8rem;">
+                                <div class="col">
+                                    <i class="fas fa-city"></i>
+                                    Type de bien :
+                                        {% if product.categories.parent == null %}
+
+                                            {{ product.categories.name }}
+
+                                                    {% else %}
+
+                                                    {{ product.categories.parent.name }}
+
+
+                                        {% endif %}
+
+                                </div>
+                                <div class="col">
+                                    <i class="fas fa-ruler-combined"></i>
+                                    Surface : {{ product.surface }} m²
+                                </div>
+                                <div class="col">
+                                    <img src="/assets/images/stairs_icon_198747.png" width="16px;"> Etage: {{ product.floor }}
+                                </div>
+                            </div>
+
+                            <div class="row text-center p-2 border-bottom" style="font-size: 0.8rem;">
+                                <div class="col">
+
+                                    <i class="fas fa-couch"></i> Pièce à vivre: 25m²
+
+
+                                </div>
+                                <div class="col">
+                                    <i class="fas fa-bed"></i> Chambre:
+                                            {{product.bedrooms}}
+
+                                </div>
+                                <div class="col">
+                                    <i class="fas fa-thermometer-half"></i> Energie: {{ product.heatType }}
+                                </div>
+                            </div>
+                            <div class="col text-center">
+                            <button class=" btn btn-sm btn-outline-dark rounded-pill mt-1" data-bs-toggle="modal" data-bs-target="#exampleModal">Voir tous les critères</button>
+                            </div>
+                        {% if product.options is not empty  %}
+                            <span class="fw-bold">Extérieur:</span>
+                            <div class="col text-center p-2 border-bottom">
+                            {% for option in product.options %}
+
+                           <span class="badge rounded-pill bg-dark"><i class="fas fa-hashtag"></i> {{option.name}}</span>
+                            {% endfor %}
+                            </div>
+                        {% endif %}
+                        </div>
+                        <div class="buttons col text-center mt-3 gap-3 ">
+                                                <div class="col mt-3 text-center"><span class="js-arrow text-success"><i class="fas fa-level-up-alt fa-lg"></i></span><span class="js-deal fw-bold"> Bonne affaire: </span><span class="js-percent badge bg-success">-12%</span>par rapport au prix moyen du secteur</div>
+                                                            <button class=" btn btn-outline-danger rounded-pill mt-3 "><i class="far fa-calendar-alt"></i> <b>Visiter</b></button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div class="b-example-divider"></div>
+
+    {# 2ème section du bien #}
+    <div class="container mt-5 ">
+
+        <div class="">
+            <div class="row g-0">
+                <div class="col-md-5 border-end order-md-1">
+                    <div class=" d-flex flex-column justify-content-center p-3">
+
+
+                        <div id="quatorCard" class="img-fluid shadow-lg">
+                        </div>
+
+                        <span class="fw-bold">Vivre dans le quartier: </span>
+                         <span ><ul class="d-flex list-unstyled mb-0 d-inline" style="color:grey">
+
+                                <li class="d-flex align-items-center me-3 js-quator  ">
+                                <i class="fas fa-map-pin"></i>&nbsp Carmes,
+                                </li>
+                                <li class="d-flex align-items-center js-city">
+                        <i class="far fa-map bi me-2"></i>&nbsp Toulouse centre, 31000
+                                </li>
+                            </ul></span>
+                <div class="content">
+
+
+
+                <p id="desc" class="mb-0">
+
+                Au cœur de Toulouse, le quartier des Carmes séduit pour son calme. On y retrouve de belles demeures, d’anciens hôtels particuliers et des appartements de cachet.
+                <a id="yourLinkID" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    ...afficher plus
+  </a>
+
+
+                </p>
+
+
+
+<div class="collapse " id="collapseExample">
+
+<p class="mt-0">Le marché couvert de la place des Carmes, formidable atout qui offre des produits frais et variés: primeurs, boulangers, charcutiers, fromagers, bouchers, traiteurs, poissonniers et cavistes y sont présents chaque matin du mardi au dimanche.  </p></div>
+
+
+
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+                <div class="col-md-7 order-md-2">
+                    <div class="p-3 right-side">
+
+                        <div class='custom-popup shadow-lg item js-marker' data-lat="{{product.latitude}}" data-lng="{{product.longitude}}" id='map' style="height: 65vh"></div>
+                           <span ><ul class="d-flex list-unstyled mb-0 d-inline" style="color:grey">
+
+                                <li class="d-flex align-items-center me-3 js-quator  ">
+                                <i class="fas fa-map-pin"></i>&nbsp Carmes,
+                                </li>
+                                <li class="d-flex align-items-center js-city">
+                        <i class="fas fa-map-marked-alt"></i>&nbsp Toulouse centre, 31000
+                                </li>
+                            </ul></span>
+                        <div class="container mt-1">
+
+
+
+
+                            <div class="buttons d-flex flex-row mt-1 gap-3 ">
+
+                                <button class="btn btn-outline-primary rounded-pill"><i class="fas fa-route"></i> <b>Simuler un trajet</b></button>
+                                 <button class=" btn btn-outline-danger rounded-pill"><i class="far fa-calendar-alt"></i> <b>Visiter</b></button>
+
+                            </div>
+                             <div class="buttons col text-center mt-3 gap-3 ">
+
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+<div class="b-example-divider"></div>
+    <div class="container my-5 ">
+
+
+
+        <div class="row">
+                    <div class="col">
+                        <div class="d-flex justify-content-between align-items-center" style="">
+
+
+                            <span class="fw-bold">Prix au m² du bien</span>
+
+
+                        </div>
+
+
+                        <div class="row">
+                            <ul class="d-flex list-unstyled mb-0 d-inline" style="color:grey">
+
+                                <li class="d-flex align-items-center me-3 js-quator">
+                                <svg class="svg-inline--fa fa-map-pin fa-w-9 bi me-2" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="map-pin" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 512" data-fa-i2svg=""><path fill="currentColor" d="M112 316.94v156.69l22.02 33.02c4.75 7.12 15.22 7.12 19.97 0L176 473.63V316.94c-10.39 1.92-21.06 3.06-32 3.06s-21.61-1.14-32-3.06zM144 0C64.47 0 0 64.47 0 144s64.47 144 144 144 144-64.47 144-144S223.53 0 144 0zm0 76c-37.5 0-68 30.5-68 68 0 6.62-5.38 12-12 12s-12-5.38-12-12c0-50.73 41.28-92 92-92 6.62 0 12 5.38 12 12s-5.38 12-12 12z"></path></svg><!-- <i class="fas fa-map-pin bi me-2"></i> -->
+                                Carmes
+                                </li>
+                                <li class="d-flex align-items-center js-city">
+                                <svg class="svg-inline--fa fa-map fa-w-18 bi me-2" aria-hidden="true" focusable="false" data-prefix="far" data-icon="map" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M560.02 32c-1.96 0-3.98.37-5.96 1.16L384.01 96H384L212 35.28A64.252 64.252 0 0 0 191.76 32c-6.69 0-13.37 1.05-19.81 3.14L20.12 87.95A32.006 32.006 0 0 0 0 117.66v346.32C0 473.17 7.53 480 15.99 480c1.96 0 3.97-.37 5.96-1.16L192 416l172 60.71a63.98 63.98 0 0 0 40.05.15l151.83-52.81A31.996 31.996 0 0 0 576 394.34V48.02c0-9.19-7.53-16.02-15.98-16.02zM224 90.42l128 45.19v285.97l-128-45.19V90.42zM48 418.05V129.07l128-44.53v286.2l-.64.23L48 418.05zm480-35.13l-128 44.53V141.26l.64-.24L528 93.95v288.97z"></path></svg><!-- <i class="far fa-map bi me-2"></i> -->
+                                Toulouse centre
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center border-bottom">
+                            <div class="text-primary" style="font-weight: bold; font-size: 1.5em;">
+                                {{product.formattedPrice()}} € <small id="js-moy" class="fs-6" style="color:grey">{{(product.price // product.surface )}} €/m²</small>
+                            </div>
+
+                        </div>
+
+                    </div>
+{# prix secteur#}
+                    <div class="col">
+                        <div class="d-flex justify-content-between align-items-center" style="">
+
+
+                            <span class="fw-bold">Prix au m² du secteur</span>
+
+
+                        </div>
+
+
+                        <div class="row">
+                            <ul class="d-flex list-unstyled mb-0 d-inline" style="color:grey">
+
+                                <li class="d-flex align-items-center me-3 js-quator">
+                                <svg class="svg-inline--fa fa-map-pin fa-w-9 bi me-2" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="map-pin" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 512" data-fa-i2svg=""><path fill="currentColor" d="M112 316.94v156.69l22.02 33.02c4.75 7.12 15.22 7.12 19.97 0L176 473.63V316.94c-10.39 1.92-21.06 3.06-32 3.06s-21.61-1.14-32-3.06zM144 0C64.47 0 0 64.47 0 144s64.47 144 144 144 144-64.47 144-144S223.53 0 144 0zm0 76c-37.5 0-68 30.5-68 68 0 6.62-5.38 12-12 12s-12-5.38-12-12c0-50.73 41.28-92 92-92 6.62 0 12 5.38 12 12s-5.38 12-12 12z"></path></svg><!-- <i class="fas fa-map-pin bi me-2"></i> -->
+                                Carmes
+                                </li>
+                                <li class="d-flex align-items-center js-city">
+                                <svg class="svg-inline--fa fa-map fa-w-18 bi me-2" aria-hidden="true" focusable="false" data-prefix="far" data-icon="map" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M560.02 32c-1.96 0-3.98.37-5.96 1.16L384.01 96H384L212 35.28A64.252 64.252 0 0 0 191.76 32c-6.69 0-13.37 1.05-19.81 3.14L20.12 87.95A32.006 32.006 0 0 0 0 117.66v346.32C0 473.17 7.53 480 15.99 480c1.96 0 3.97-.37 5.96-1.16L192 416l172 60.71a63.98 63.98 0 0 0 40.05.15l151.83-52.81A31.996 31.996 0 0 0 576 394.34V48.02c0-9.19-7.53-16.02-15.98-16.02zM224 90.42l128 45.19v285.97l-128-45.19V90.42zM48 418.05V129.07l128-44.53v286.2l-.64.23L48 418.05zm480-35.13l-128 44.53V141.26l.64-.24L528 93.95v288.97z"></path></svg><!-- <i class="far fa-map bi me-2"></i> -->
+                                Toulouse centre
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center border-bottom">
+                            <div class="text-primary" style="font-weight: bold; font-size: 1.5em;">
+                                <small id="price" class="fs-6" style="color:grey">3000 €/m²</small>
+                            </div>
+                            <div class="ratings d-flex flex-row align-items-center">
+                                <div class="d-flex flex-row">
+                                    <i class='bx bxs-star' ></i>	<i class='bx bxs-star' ></i>	<i class='bx bxs-star' ></i>	<i class='bx bxs-star' ></i>	<i class='bx bx-star' ></i>	</div>	<span>le: {{ product.createdAt|date("d/m/Y") }}</span>
+                                </div>
+                        </div>
+
+                    </div>
+                </div>
+                                                <div class="col mt-3 text-center"><span class="js-arrow text-success"><i class="fas fa-level-up-alt fa-lg"></i></span><span class="js-deal fw-bold"> Bonne affaire: </span><span class="js-percent badge bg-success">-12%</span>par rapport au prix moyen du secteur</div>
+
+    </div>
+
+    <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Critères</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex">
+
+                            <table class="table table-striped" style="font-size:80%">
+                        <tr>
+                            <td>Date de construction</td>
+                            <td>2008</td>
+                        </tr>
+                        <tr>
+                            <td>Surface habitable</td>
+                            <td>{{ product.surface }} m²</td>
+                        </tr>
+                        <tr>
+                            <td>Pièces</td>
+                            <td>{{ product.rooms }}</td>
+                        </tr>
+                        <tr>
+                            <td>Chambres</td>
+                            <td>{{ product.bedrooms }}</td>
+                        </tr>
+                        <tr>
+                            <td>Etage</td>
+                            <td>{{ product.floor }}</td>
+                        </tr>
+                        <tr>
+                            <td>Chauffage</td>
+                            <td>{{ product.heatType }}</td>
+                        </tr>
+                            </table>
+                        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Ok</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+
+
+
+
+{% endblock %}
+{% block javascripts %}
+<script>
+// Cette fonction permet de changer l'image principale dans un carrousel lorsque l'utilisateur clique sur une vignette.
+function changeImage(element) {
+    // On récupère la référence de l'image principale dans le carrousel en utilisant son identifiant unique.
+    var main_product_image = document.getElementById('main_product_image');
+
+    // On affiche l'URL de l'image actuellement affichée dans la console pour déboguer si nécessaire.
+    console.log("L'URL de l'image principale actuelle est : ", main_product_image.src);
+
+    // On construit le nouvel URL de l'image à afficher en remplaçant "mini" par "medium" dans le chemin de l'image miniature qui a été cliquée.
+    let new_image_url= element.src.replace("mini","medium");
+
+    // On affiche le nouvel URL de l'image à afficher dans la console pour déboguer si nécessaire.
+    console.log("Le nouvel URL de l'image sélectionnée est : ", new_image_url);
+
+    // On met à jour l'attribut "src" de l'image principale avec le nouvel URL, ce qui remplace l'image affichée dans le carrousel.
+    main_product_image.src = new_image_url;
+
+    // On enlève la classe "active" de l'élément actuellement actif dans le carrousel
+    var active_carousel_item = document.querySelector('.carousel-item.active');
+    active_carousel_item.classList.remove('active');
+
+    // On ajoute la classe "active" à l'élément correspondant à l'image sélectionnée dans le carrousel
+    var carousel_items = document.querySelectorAll('.carousel-item');
+    for (var i = 0; i < carousel_items.length; i++) {
+        if (carousel_items[i].querySelector('img').src === new_image_url) {
+            carousel_items[i].classList.add('active');
+            break;
+        }
+    }
+}
+</script>
+<script src="{{ asset('assets/js/detailsScripts2.js') }}" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.2/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+<script src="/assets/js/L.Path.DashFlow.js"></script>
+<script src="/assets/js/L.ajax.min.js "></script>
+<script src="/assets/js/leaflet-loader.js"></script>
+<script src="/assets/js/quatorsToulouse.js"></script>
+<script src="/assets/js/stationBusToulouse.js"></script>
+<script src="/assets/js/StreetViewButtons.js"></script>
+ <script src="{{ asset('assets/js/Control.FullScreen.js') }}"></script>
+
+
+
+{% endblock %}

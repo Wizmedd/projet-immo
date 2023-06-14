@@ -1,0 +1,76 @@
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+
+
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100" id="exampleModalLabel"><i class="fas fa-sliders-h"></i> Filtres</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body ">
+     {{ form_start(form, {attr: {class: 'js-filter-form'}}) }}
+
+      <div class="spinner-border js-loading" role="status" aria-hidden="true" style="display: none">
+      <span class="sr-only">Loading...</span>
+      </div>
+
+        <h5 class="modal-title mt-2">Localisation</h5>
+        <div class="autocomplete my-2" style="width:100%;">
+          <div class="input-group">
+
+            {{ form_widget(form.q) }}
+            <span class="input-group-text"><i class='fas fa-map-marker-alt fa-sm' style='color:grey;'></i> </span>
+          </div>
+        </div>
+
+        <h6 class="modal-title my-3 h5 ">Budget en <i class="fas fa-euro-sign"></i></h6>
+        <div class="row w-100 mt-2">
+          <div class="col">
+            {{ form_row(form.minPrice ) }}
+          </div>
+          <div class="col">
+            {{ form_row(form.maxPrice ) }}
+          </div>
+
+        </div>
+        <div class="col w-100">
+          <div id="price-slider" data-min="{{ min }}" data-max="{{ max }}" class="m-3"></div>
+        </div>
+
+        <h5 class="modal-title my-3">Type de bien</h5>
+        {{ form_row(form.categories ) }}
+        <div class="col w-100">
+          <h6 class="modal-title my-3 h5">Surface du bien en m²</h6>
+          {{ form_row(form.minSurface) }}
+          <div class="col w-100 border-bottom ">Minimum: <output id="surface"><b>10</b></output> <b>m²</b> habitable</div>
+        </div>
+
+
+        <h6 class="modal-title my-3 h5 ">Nombre de chambre</h6>
+        {{ form_row(form.minBedRooms ) }}
+
+
+
+        <h6 class="modal-title my-3 h5 ">Extérieur</h6>
+          <div class="row w-100 mb-3">
+
+            {{ form_row(form.options ) }}
+          </div>
+
+
+
+      </div>
+      <div class="modal-footer justify-content-center">
+              <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+              <button class="btn btn-danger special mt-2" style="color:white"><i class="fas fa-search-location fa-lg fa-flip-horizontal"></i>
+                            Rechercher
+            </button>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+   {{ form_end(form) }}

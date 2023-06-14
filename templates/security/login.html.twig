@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body  %}
+
+<main class="form-signin text-center">
+   <form method="post">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                {% if app.user %}
+                    <div class="mb-3">
+                        Vous êtes connecté(e) comme {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Me déconnecter</a>
+                    </div>
+                {% endif %}
+
+    <span class="mb-4 text-primary"  ><i class="fab fa-fly fa-4x" ></i></span>
+    <h1 class="h3 mb-3 fw-normal">Me connecter</h1>
+
+    <div class="form-floating">
+                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" placeholder="Email" class="form-control" autocomplete="email" required autofocus>
+      <label for="InputEmail">Email</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password" autocomplete="current-password" required>
+      <label for="id="inputPassword"">Mot de passe</label>
+        <input type="hidden" name="_csrf_token"
+                            value="{{ csrf_token('authenticate') }}"
+                        >
+
+
+    </div>
+
+    <div class="checkbox mb-3">
+      <label>
+        <input type="checkbox" value="_remember_me"> Se souvenir de moi
+      </label>
+    </div>
+    <button class="w-100 btn btn-lg btn-primary" type="submit" >Connexion</button>
+    <a href="{{ path('app_register') }}" >M'inscrire</a></br>
+    <a href="{{ path('forgotten_password') }}">Mot de passe oublié</a>
+
+
+    <p class="mt-5 mb-5 text-muted">© Imm'haut 2022</p>
+  </form>
+</main>
+
+{% endblock %}

@@ -1,0 +1,167 @@
+ {{ form_start(form, {attr: {class: 'js-filter-form'}}) }}
+
+
+
+  <div class="row mb-1 ">
+    <div class="col-md ">
+
+
+      <div class="autocomplete mb-2" style="width:100%;">
+        <div class="input-group">
+
+          {{ form_widget(form.q) }}
+          <span class="input-group-text"><i class='fas fa-map-marker-alt fa-sm' style='color:grey;'></i> </span>
+        </div>
+      <div id="selected-values" class="d-flex rounded bg-white"></div>
+      </div>
+
+
+
+    </div>
+
+    <div class="col-md">
+                      <div class="btn-group d-flex" role="group" aria-label="Basic outlined example" >
+    <button type="button" class="btn btn-outline-light w-100" data-bs-toggle="modal" data-bs-target="#exampleModal2" title="Type de bien" >Type</button>
+    <button type="button" class="btn btn-outline-light w-100" data-bs-toggle="modal" data-bs-target="#exampleModal" title="Surface minimum">Surface</button>
+    <button type="button" class="btn btn-outline-light w-100" data-bs-toggle="modal" data-bs-target="#exampleModal4" title="Nombre de chambre">Chambre</button>
+    <button type="button" class="btn btn-outline-light w-100" data-bs-toggle="modal" data-bs-target="#exampleModal3" title="+ de filtres">Extérieur</button>
+
+
+  </div>
+  </div>
+
+
+                    </div>
+
+
+
+
+
+
+
+
+            <button class="btn-lg btn-danger special mt-2" style="color:white"><i class="fas fa-search-location fa-lg fa-flip-horizontal"></i>
+                            Rechercher
+            </button>
+
+        </div>
+
+
+
+
+
+    </div>
+</header>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100" id="exampleModalLabel"><i class="fas fa-ruler-combined"></i> Surface habitable en m²</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        Minimum: {{ form_row(form.minSurface) }}
+
+ <output id="surface"><b>10</b></output> <b>m²</b> habitable
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+        <button type="button"  data-bs-dismiss="modal" class="btn-sm btn btn-primary">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100" id="exampleModalLabel"><i class="fas fa-city"></i> Type de bien</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body ">
+      {{ form_row(form.categories ) }}
+
+      </div>
+      <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+              <button type="button" data-bs-dismiss="modal" class="btn-sm btn btn-primary">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100" id="exampleModalLabel"><i class="fas fa-bed"></i> Nombre de chambre</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body ">
+      {{ form_row(form.minBedRooms ) }}
+
+      </div>
+      <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+              <button type="button" data-bs-dismiss="modal" class="btn-sm btn btn-primary">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal3" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100" id="exampleModalLabel"><i class="fas fa-filter"></i> Filtres</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body ">
+      <h6 class="modal-title ">Spécificités</h6>
+          <div class="row w-100 mb-3">
+
+                            {{ form_row(form.options ) }}
+          </div>
+
+        <h6 class="modal-title ">Budget</h6>
+        <div class="row w-100 mt-2">
+          <div class="col">
+            {{ form_row(form.minPrice ) }}
+          </div>
+          <div class="col">
+                {{ form_row(form.maxPrice ) }}
+          </div>
+          <div class="col">
+          <div id="price-slider" data-min="{{ min }}" data-max="{{ max }}" class="m-3 "></div>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+              <button type="button" data-bs-dismiss="modal" class="btn-sm btn btn-primary">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{ form_end(form) }}

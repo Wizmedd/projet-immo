@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{% block title %}Accueil{% endblock %} - Site Projet immobilier</title>
+		<link rel="icon" type="image/ico" href="{{ asset('favicon.ico') }}" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- Feuilles de styles -->
+
+		<link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+
+        {% block stylesheets %}{% endblock %}
+		<link rel="stylesheet" href="{{ asset('assets/css/all.css') }}">
+		<link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
+
+
+		<!-- Fichiers JS -->
+		<script src="{{ asset('assets/js/all.js') }}"></script>
+		<script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}" defer></script>
+
+
+
+		{% block javascripts %}{% endblock %}
+
+
+	</head>
+	<body>
+
+
+	{% include "_partials/_nav.html.twig" %}
+	{% if app.user and app.user.isVerified == false %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="alert-message">
+                    <strong>Un Email vous a été envoyé pour activer votre compte</strong>, <a href="{{ path('resend_verif') }}">renvoyer le lien d'activation</a>
+                </div>
+            </div>
+        {% endif %}
+	{% include "_partials/_flash.html.twig" %}
+		{% block body %}{% endblock %}
+
+        {% include "_partials/_footer.html.twig" %}
+	</body>
+</html>

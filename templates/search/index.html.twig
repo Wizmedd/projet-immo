@@ -1,0 +1,142 @@
+{% extends "base.html.twig" %}
+{% block stylesheets %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+
+
+{% endblock %}
+{% block title %}Recherche de bien immobilier
+
+{% endblock %}
+
+{% block body %}
+
+
+
+
+
+<div class="container-fluid js-filter">
+	<div class="row g-0 mt-3 border-bottom reverse">
+
+		<div class="col-md-7 px-3 border-end">
+			{# d-flex justify-content-between align-items-center px-3 #}
+
+
+            <div class="col my-2">
+            {% if products.getTotalItemCount == 0 %}
+            <div class="text-center mb-3">
+            <i class="fab fa-fly fa-6x text-primary"></i>
+                <p class="text-center mb-3" ><b class="h2">Oups</b>, votre recherche n'a pas donné de résultat !</br>Essayez de changez de localisation ou réduisez vos filtres</p>
+
+                                <button onClick="window.history.back();" class=" btn btn-lg btn-outline-secondary rounded-pill mt-1" type="button">Retour</button>
+                                <button class=" btn btn-lg btn-outline-dark rounded-pill mt-1" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-sliders-h"></i> Filtres </button>
+
+            </div>
+            {% else %}
+            <div class="row g-0 px-2 js-filter-sorting">
+            {% include '_partials/_sorting.html.twig' %}
+
+
+            </div>
+            {% endif %}
+            </div>
+
+
+
+    <div class="list js-filter-content">
+
+{% include '_partials/_products.html.twig' %}
+
+
+
+			</div>
+            {# display navigation #}
+<div class="navigation js-filter-pagination">
+   {% include '_partials/_pagination.html.twig' %}
+
+</div>
+			</div>
+		<div id="main-div" class="col-md-5 border-end ">
+
+            <div class="search-map" id="map" ></div>
+
+		</div>
+	</div>
+
+</div>
+<div class="js-filter-form">
+{% include '_partials/_searchfilter.html.twig' with {form: form, min: min, max: max} only %}
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+
+<script src="{{ asset('assets/js/searchScripts.js') }}" defer></script>
+
+<script src="{{ asset('assets/js/autocomplete.js') }}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js"></script>
+<script src="{{ asset('assets/js/vendor.js') }}" ></script>
+<script src="{{ asset('assets/js/sectorsToulouse.js') }}"></script>
+<script src="/assets/js/sectorsToulouse.js"></script>
+
+
+
+<script>
+$(document).ready(function() {
+
+
+
+$('body').on('shown.bs.modal', '#exampleModal', function() {
+  $(this).find('.opt').each(function() {
+
+    $(this).select2({
+      dropdownParent: ('#exampleModal .modal-content'),
+      placeholder:"Quelles sont vos critères ?",
+      width: '100%'
+      // ...
+    });
+
+
+  });
+
+
+
+});
+
+
+
+$('body').on('shown.bs.modal', '#exampleModal', function() {
+  $(this).find('.cat').each(function() {
+
+    $(this).select2({
+      dropdownParent: ('#exampleModal .modal-content'),
+      placeholder:"Quelles sont vos type de biens ?",
+      width: '100%'
+      // ...
+    });
+
+
+  });
+
+
+
+});
+
+
+
+});
+
+
+
+</script>
+
+
+
+
+
+{% endblock %}

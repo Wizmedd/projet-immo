@@ -1,0 +1,267 @@
+{% extends "base.html.twig" %}
+{% block stylesheets %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+
+
+{% endblock %}
+{% block title %}Déposer votre annonce{% endblock %}
+
+
+{% block body %}
+    <div class="container">
+    <h1 class="display-5 fw-bold my-4">Vendez votre bien immobilier sans commission</h1>
+    <h2 class="h5 mb-3"><em>Veuillez compléter tous les champs suivants: </em></h2>
+
+    {% include 'products/_form.html.twig' %}
+    </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.2/leaflet.js"></script>
+<script>
+
+let mymap, marqueur // Variable qui permettra de stocker la carte
+
+
+// on décale vers le haut les infobulle d'erreurs de boostrap
+ document.addEventListener('click', function(e) {
+  var form = e.target.form;
+  if (e.target.type === 'submit') {
+    console.log('submit');
+
+
+    reposition();
+
+  }
+});
+
+var headerHeight;
+var reposition = function() {
+  headerHeight || (headerHeight = document.querySelector('header').offsetHeight + 50);
+  setTimeout(function() {
+    window.scrollBy(0, -headerHeight);
+  }, 50);
+};
+//
+
+
+
+//on gère les preview d'images uploadées
+
+   const input = document.querySelector('input[type="file"]');
+    const preview = document.getElementById('preview');
+
+
+    input.addEventListener('change', updatePreview);
+
+    function updatePreview() {
+        preview.innerHTML = '';
+        if( input.files.length > 3){
+
+
+        const errorMessage = document.createElement('div');
+        errorMessage.classList.add('alert', 'alert-danger');
+        errorMessage.role = "alert";
+        errorMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Le nombre maximum de téléchargements d'images pour votre annonce est de 3.</br>Nous détectons pour votre annonce : ${input.files.length} fichiers. Veuillez réduire le nombre d'images.`;
+
+        preview.appendChild(errorMessage);
+            input.value = '';
+            return false;
+    }
+        for (let file of input.files) {
+            const reader = new FileReader();
+            reader.addEventListener('load', function() {
+                const image = new Image();
+                image.src = reader.result;
+                preview.appendChild(image);
+            });
+            reader.readAsDataURL(file);
+
+
+            console.log(file);
+
+  // Vérifie si le type MIME est une image
+  if (!file.type.startsWith('image/')) {
+    //alert(`Le fichier ${file.name} n'est pas une image valide, veuillez poster une image au format jpg.`);
+    //console.log(input)
+    //input.value = '';
+    //return false;
+    const errorMessage = document.createElement('div');
+    errorMessage.classList.add('alert', 'alert-danger');
+    errorMessage.role = "alert";
+    errorMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Le fichier ${file.name} n'est pas une image valide.`;
+
+    //errorMessage.textContent = `Le fichier ${file.name} n'est pas une image valide.`;
+    preview.appendChild(errorMessage);
+    console.log(errorMessage)
+    input.value = '';
+    return false;
+  }
+        }
+
+
+
+
+}
+
+
+
+    function clearPreviewImages() {
+       // Supprimer toutes les images affichées dans l'élément de prévisualisation
+    preview.innerHTML = '';
+
+    // Réinitialiser la valeur du champ d'entrée de fichier
+    input.value = '';
+
+    }
+
+
+
+
+
+// On attend que le DOM soit chargé
+window.onload = () => {
+
+
+
+
+
+
+    // Nous initialisons la carte et nous la centrons sur Paris
+    mymap = L.map('detailsMap').setView([43.600000, 1.433333], 12);
+
+
+
+
+    L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 18,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        minZoom: 1,
+        name: 'tiles',
+        // Il est toujours bien de laisser le lien vers la source des données
+        attribution: 'données © <a href="//osm.org/copyright">OpenStreetMap</a>/ODbL - rendu <a href="//google.fr/maps/">Google Maps: vue Satellite</a>'
+    }).addTo(mymap)
+
+
+    // On écoute le clic sur la carte et on lance la fonction "mapClickListen"
+    mymap.on('click', mapClickListen);
+    document.querySelector('.ville').addEventListener("blur", getCity);
+    }
+
+    /**
+ * Cette fonction se déclenche au clic, crée un marqueur et remplit les champs latitude et longitude
+ * @param {event} e
+ */
+function mapClickListen(e) {
+    // On récupère les coordonnées du clic
+    pos = e.latlng
+
+    // On crée un marqueur
+    addMarker(pos)
+
+    // On affiche les coordonnées dans le formulaire
+    document.querySelector(".lat").value=pos.lat
+    document.querySelector(".lon").value=pos.lng
+}
+
+/**
+ * Ajoute un marqueur sur la carte
+ * @param {*} pos
+ */
+function addMarker(pos){
+    // On vérifie si le marqueur existe déjà
+    if (marqueur != undefined) {
+        // Si oui, on le retire
+        mymap.removeLayer(marqueur);
+    }
+
+    // On crée le marqueur aux coordonnées "pos"
+    marqueur = L.marker(
+        pos, {
+            // On rend le marqueur déplaçable
+            draggable: true
+        }
+    )
+
+    // On écoute le glisser/déposer et on met à jour les coordonnées
+    marqueur.on('dragend', function(e) {
+        pos = e.target.getLatLng();
+        document.querySelector(".lat").value=pos.lat;
+        document.querySelector(".lon").value=pos.lng;
+    });
+
+    // On ajoute le marqueur
+    marqueur.addTo(mymap)
+}
+
+/**
+ * Récupérer les coordonnées de l'adresse et placer le marqueur
+ */
+function getCity(){
+    // On "fabrique" l'adresse complète (des vérifications préalables seront nécessaires)
+    let adresse = document.querySelector(".adresse").value + ", " + document.querySelector(".cp").value+ " " + document.querySelector(".ville").value;
+
+    // On initialise la requête Ajax
+    const xmlhttp = new XMLHttpRequest
+
+    // On détecte les changements d'état de la requête
+    xmlhttp.onreadystatechange = () => {
+        // Si la requête est terminée
+        if(xmlhttp.readyState == 4){
+            // Si nous avons une réponse
+            if(xmlhttp.status == 200){
+                // On récupère la réponse
+                let response = JSON.parse(xmlhttp.response)
+
+                // On récupère la latitude et la longitude
+                let lat = response[0]['lat']
+                let lon = response[0]['lon']
+
+                // On écrit les valeurs dans le formulaire
+                document.querySelector(".lat").value= lat;
+                document.querySelector(".lon").value= lon;
+
+                // On crée le marqueur
+                pos = [lat, lon];
+                addMarker(pos);
+
+                // On centre la carte sur l'adresse
+                mymap.setView(pos, 18);
+            }
+        }
+    }
+
+    // On ouvre la requête
+    xmlhttp.open('get', `https://nominatim.openstreetmap.org/search?q=${adresse}&format=json&addressdetails=1&limit=1&polygon_svg=1`)
+
+    // On envoie la requête
+    xmlhttp.send();
+
+
+
+}
+
+
+
+
+
+$(document).ready(function() {
+    $('.opt').select2({
+      placeholder:"Votre bien possède des extérieurs ?",
+      width: '100%'
+      // ...
+    });
+
+
+
+})
+
+
+
+
+</script>
+{% endblock %}
+
+

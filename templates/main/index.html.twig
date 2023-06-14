@@ -1,0 +1,646 @@
+
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{% block title %}Accueil{% endblock %} - Imm'Haut - Vente immobilière directe à Toulouse sans commission</title>
+	<link rel="icon" type="image/jpg" href="{{ asset('favicon.ico') }}" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+		<!-- Feuilles de styles -->
+
+		<link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+
+        {% block stylesheets %}{% endblock %}
+		<link rel="stylesheet" href="{{ asset('assets/css/all.css') }}">
+		<link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
+
+
+		<!-- Fichiers JS -->
+
+		<script src="{{ asset('assets/js/all.js') }}"></script>
+		<script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}" defer></script>
+
+
+		{% block javascripts %}{% endblock %}
+
+
+	</head>
+  <body>
+
+
+
+
+{% block body %}
+
+
+
+<header class="jumbotron">
+
+  <div class="container">
+
+    {% include "_partials/_home_nav.html.twig" %}
+
+    {% if app.user and app.user.isVerified == false %}
+          <div class="alert alert-warning alert-dismissible" role="alert">
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              <div class="alert-message">
+                  <strong>Un mail vous a été envoyé pour activer votre compte</strong>, <a href="{{ path('resend_verif') }}">renvoyer le lien d'activation</a>
+              </div>
+          </div>
+    {% endif %}
+
+    {% include "_partials/_flash.html.twig" %}
+
+
+    <div class="container text-center js-filter" style="">
+
+      <h1 class="text-center home">Trouvez la propriété de vos rêves à Toulouse</h1>
+
+      <p class="lead lead-one text-center mt-3 mb-3" style="opacity: 1;">
+Bienvenue sur notre plateforme de vente immobilière en direct, sans commission.<br>Nous sommes spécialisés dans la mise en relation entre propriétaires particuliers et acquéreurs potentiels pour les biens immobiliers situés à Toulouse et ses environs.
+</p>
+
+
+
+
+
+      {% include '_partials/_filters.html.twig' with {form: form, min: min, max: max} only %}
+
+    </div>
+    <div class="b-example-divider"></div>
+    <div class="js-user-rating" data-is-authenticated="{{ app.user ? 'true' : 'false' }}">
+  </div>
+</header>
+
+
+
+<h2 class="h1 text-center pb-2 mt-5 border-bottom">Carte immobilière Toulouse Métropole</h2>
+
+<div class='custom-popup' id='map' style="height: 100vh"></div>
+
+<div class="b-example-divider"></div>
+
+
+
+<main class="container-fluid">
+
+
+
+    <div class="container js-paginate">
+        <h2 class="h1 text-center pb-2 mt-5 border-bottom">Nouveautés</h2>
+        <div class="js-content row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+
+
+            {% include '_partials/_home_products.html.twig' %}
+
+
+        </div>
+
+                    {# display navigation #}
+
+        <div class="navigation js-pagination">
+
+          {% include '_partials/_pagination.html.twig' %}
+
+
+        </div>
+
+    </div>
+
+
+
+
+    <div class="b-example-divider"></div>
+
+
+
+    <div class="container px-4 py-5 border-bottom">
+      <h2 class="h1 text-center pb-2 border-bottom">Quartiers Toulousains<h2>
+        <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5 custom-font">
+
+            <div class="col">
+              <div class="custom-card custom-card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg custom-card text-shadow-3" style="background-image: url('/assets/images/daurade.jpg');">
+                <div class="d-flex flex-column h-100 p-5 pb-3 text-white ">
+                  <h2 class="mb-4 display-6 lh-1 fw-bold">Place de la Daurade</h2>
+                  <ul class="d-flex list-unstyled mt-auto">
+                    <li class="me-auto">
+                    </li>
+                    <li class="d-flex align-items-center me-3">
+                      <i class="fas fa-map-pin bi me-2"></i>
+                      <small>Daurade</small>
+                    </li>
+                    <li class="d-flex align-items-center">
+                      <i class="far fa-map bi me-2"></i>
+                      <small>Toulouse centre</small>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+                    <div class="custom-card custom-card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg custom-card" style="background-image: url('/assets/images/esquirol2.jpg');">
+                      <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-3 ">
+                        <h2 class="mb-4 display-6 lh-1 fw-bold">Esquirol</h2>
+                        <ul class="d-flex list-unstyled mt-auto">
+                          <li class="me-auto">
+                          </li>
+                          <li class="d-flex align-items-center me-3">
+                            <i class="fas fa-map-pin bi me-2"></i>
+                            <small>Esquirol</small>
+                          </li>
+                          <li class="d-flex align-items-center">
+                            <i class="far fa-map bi me-2"></i>
+                            <small>Toulouse centre</small>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+            </div>
+            <div class="col">
+              <div class="custom-card custom-card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg custom-card" style="background-image: url('/assets/images/capitole.jpg');">
+                <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-3 ">
+                  <h2 class="mb-4 display-6 lh-1 fw-bold">Place du Capitole</h2>
+                  <ul class="d-flex list-unstyled mt-auto">
+                    <li class="me-auto">
+                    </li>
+                    <li class="d-flex align-items-center me-3">
+                      <i class="fas fa-map-pin bi me-2"></i>
+                      <small>Capitole</small>
+                    </li>
+                    <li class="d-flex align-items-center">
+                      <i class="far fa-map bi me-2"></i>
+                      <small>Toulouse centre</small>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+              <div class="col">
+                <div class="custom-card custom-card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg custom-card" style="background-image: url('/assets/images/jardin.jpg')">
+                  <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-3">
+                    <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Ballade au jardin japonais</h2>
+                    <ul class="d-flex list-unstyled mt-auto text-shadow-4 text-black">
+                      <li class="me-auto">
+                      </li>
+                      <li class="d-flex align-items-center me-3">
+                        <i class="fas fa-map-pin bi me-2"></i>
+                        <small>Compans</small>
+                      </li>
+                      <li class="d-flex align-items-center">
+                        <i class="far fa-map bi me-2"></i>
+                        <small>Toulouse centre</small>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="custom-card custom-card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg custom-card" style="background-image: url('/assets/images/palais.jpg')">
+                  <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-3">
+                    <h2 class="mb-4 display-6 lh-1 fw-bold">Allée Jules Guede</h2>
+                  <ul class="d-flex list-unstyled mt-auto">
+                      <li class="me-auto">
+                      </li>
+                      <li class="d-flex align-items-center me-3 text-shadow-4 text-black">
+                        <i class="fas fa-map-pin bi me-auto"></i>
+                        <small>Palais de justice</small>
+                      </li>
+                      <li class="d-flex align-items-center">
+                        <i class="far fa-map bi me-2"></i>
+                        <small>Toulouse centre</small>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="custom-card custom-card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg custom-card" style="background-image: url('/assets/images/arnaud.jpg')">
+                  <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-3">
+                    <h2 class="mb-4 display-6 lh-1 fw-bold">Arnaud Bernard</h2>
+                  <ul class="d-flex list-unstyled mt-auto">
+                      <li class="me-auto">
+                      </li>
+                      <li class="d-flex align-items-center me-3 ">
+                        <i class="fas fa-map-pin bi me-auto"></i>
+                        <small>Arnaud Bernard</small>
+                      </li>
+                      <li class="d-flex align-items-center">
+                        <i class="far fa-map bi me-2"></i>
+                        <small>Toulouse centre</small>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="b-example-divider"></div>
+
+
+{#
+
+
+    <div class="container px-4 py-5 border-bottom" id="hanging-icons">
+        <h2 class="pb-2 border-bottom">Vous parlez de nous</h2>
+        <div class="row gx-5 py-5 row-cols-1 row-cols-lg-3">
+          <div class="col d-flex align-items-start">
+            <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+              <i class="far fa-user fa-lg"></i>
+            </div>
+            <div>
+              <h2 class="h5">Eric.Z</h2>
+              <p><i class="fas fa-quote-left fa-lg"></i> Grâce à Imm'haut j'ai pû vendre mon appartement en 3 mois sans commission !<i class="fas fa-quote-right fa-lg"></i></p>
+
+            </div>
+          </div>
+          <div class="col d-flex align-items-start">
+            <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+              <svg class="bi" width="1em" height="1em"><use xlink:href="#cpu-fill"></use></svg>
+            </div>
+            <div>
+              <h2>Featured title</h2>
+              <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+
+            </div>
+          </div>
+          <div class="col d-flex align-items-start">
+            <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+              <svg class="bi" width="1em" height="1em"><use xlink:href="#tools"></use></svg>
+            </div>
+            <div>
+              <h2>Featured title</h2>
+              <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col"></div>
+          <div class="col-10"><div class="d-grid gap-1">
+            <button class="btn btn-danger btn-lg p-3 rounded-5" type="button">Je poste une annonce !</button>
+          </div></div>
+          <div class="col"></div>
+
+
+        </div>
+
+
+    </div>
+
+    <div class="b-example-divider"></div>
+
+
+
+
+
+<div class="container px-4 py-5" id="icon-grid">
+    <h2 class="pb-2 border-bottom">Notre concept</h2>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-5">
+      <div class="col d-flex align-items-start">
+		<i class="fab fa-creative-commons-nc-eu fa-lg"></i>
+        <div>
+          <h4 class="fw-bold mb-0">Aucune commission</h4>
+          <p><span class="bolder">Aucun engagement. L'agent immobilier, c'est vous&nbsp;!</span><br>
+		</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+<i class="fas fa-map-pin fa-lg "></i>        <div>
+          <h4 class="fw-bold mb-0">Localisation </h4>
+          <p>Paragraph of text beneath the heading to explain the heading.</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+        <i class="far fa-calendar-alt fa-lg"></i>
+        <div>
+          <h4 class="fw-bold mb-0">Réservation de visite en ligne</h4>
+          <p>Paragraph of text beneath the heading to explain the heading.</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+<i class="far fa-envelope"></i>        <div>
+          <h4 class="fw-bold mb-0">Relances emails automatiques
+</h4>
+          <p>avant chaque visite et en cas de dossiers incomplets</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+<i class="fas fa-tachometer-alt fa-lg"></i>
+        <div>
+          <h4 class="fw-bold mb-0">Accélérateur de visite</h4>
+          <p>Paragraph of text beneath the heading to explain the heading.</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+<i class="fas fa-search-location fa-lg"></i>        <div>
+          <h4 class="fw-bold mb-0">Featured title</h4>
+          <p>Paragraph of text beneath the heading to explain the heading.</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+<i class="far fa-handshake fa-lg"></i>      <div>
+          <h4 class="fw-bold mb-0">Signature en ligne d'une offre d'achat
+</h4>
+          <p>Paragraph of text beneath the heading to explain the heading.</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+        <i class="fas fa-sliders-h fa-lg"></i>
+        <div>
+          <h4 class="fw-bold mb-0">Plus de critères</h4>
+          <p>Paragraph of text beneath the heading to explain the heading.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+#}
+</main>
+
+<div class="container-md">
+
+<ul class="list-unstyled text-center">
+<li>
+<i class="fas fa-search fa-fw fa-lg"></i> Facile et rapide : trouvez votre logement en quelques clics
+</li>
+<li>
+<i class="fas fa-handshake fa-fw fa-lg"></i> Directement avec le propriétaire : pas de frais d'agence
+</li>
+<li>
+<i class="fas fa-smile fa-fw fa-lg"></i> Satisfaction garantie : laissez-nous vous accompagner dans votre recherche
+</li>
+</ul>
+<h2 class="h1 text-center pb-2 mt-5 border-bottom">Nos Formules<h2>
+
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center custom-font ">
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">Gratuite</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">0 €</h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Une annonce</li>
+
+              <li>3 photos maximum</li>
+              <li>Durée de validité: 1 mois</li>
+              <li>Email support</li>
+
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">Premium</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">9 €</h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Une annonce référencée</li>
+
+              <li>8 photos maximum </li>
+              <li>Durée de validité: 3 mois</li>
+
+              <li>Priority email support</li>
+              <li>Help center access</li>
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-primary">Get started</button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm border-primary">
+          <div class="card-header py-3 text-white bg-primary border-primary">
+            <h4 class="my-0 fw-normal">Pro</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">60€<small class="text-muted fw-light">/mois</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Annonces illimitées</li>
+              <li>15 GB of storage</li>
+              <li>Phone and email support</li>
+              <li>Help center access</li>
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-primary">Contact us</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+</div>
+
+<script src="{{ asset('assets/js/scripts.js') }}" defer></script>
+
+<script src="{{ asset('assets/js/autocomplete.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.2/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+<script src="/assets/js/L.ajax.min.js "></script>
+<script src="/assets/js/L.Path.DashFlow.js"></script>
+<script src="/assets/js/sectorsToulouse.js"></script>
+<script src="/assets/js/quatorsToulouse.js"></script>
+<script src="/assets/js/stationBusToulouse.js"></script>
+<script src="/assets/js/bouncemarker.js"></script>
+
+
+<script>
+
+var villeInput = document.getElementById("q");
+var selectedDiv = document.getElementById("selected-values");
+
+console.log("La variable villeInput contient : ", villeInput);
+console.log("La variable selectedDiv contient : ", selectedDiv);
+
+// écouteur d'événements pour la soumission du formulaire
+document.querySelector('form').addEventListener('submit', function(event) {
+  event.preventDefault(); // empêche l'envoi du formulaire pour le moment
+
+  // Récupération du texte de chaque div contenant une ville sélectionnée
+  var villesSelectionnees = "";
+  for(var i = 0; i < selectedDiv.children.length; i++) {
+    if(selectedDiv.children[i].tagName === "DIV") {
+      // Récupération de la ville à partir du premier span contenu dans le div
+      var villeText = selectedDiv.children[i].querySelector('span').textContent.trim();
+      if (villesSelectionnees === "") {
+        villesSelectionnees = villeText;
+      } else {
+        villesSelectionnees += " " + villeText;
+      }
+    }
+  }
+
+  console.log("Les villes sélectionnées sont : ");
+  for(var i = 0; i < selectedDiv.children.length; i++) {
+    if(selectedDiv.children[i].tagName === "DIV") {
+      console.log(selectedDiv.children[i].querySelector('span').textContent.trim());
+    }
+  }
+
+  // Mise à jour de la valeur du champ "ville" avec les villes sélectionnées
+  villeInput.value = villesSelectionnees;
+
+  console.log("La valeur du champ 'ville' sera mise à jour avec : ", villesSelectionnees);
+
+  // Envoi du formulaire
+  this.submit();
+});
+
+
+$(document).ready(function() {
+
+
+/*
+    var cities = [
+      { id: "31000", text: "31000", name: "Toulouse" },
+      { id: "Aigrefeuille", text: "Aigrefeuille", name: "Aigrefeuille" },
+      { id: "Aucamville", text: "Aucamville", name: "Aucamville" },
+      // Ajoutez une propriété 'text' pour chaque objet
+      // ...
+    ];
+
+
+
+
+
+    $('#q').select2({
+      data: cities,
+      placeholder: "Recherche une ville...",
+      allowClear: true,
+      // Utilisez la propriété 'text' pour afficher les noms de villes
+      templateSelection: function (data) {
+        return data.text;
+      }
+    });
+  */
+
+
+  $('body').on('shown.bs.modal', '#exampleModal3', function() {
+    $(this).find('.opt').each(function() {
+
+      $(this).select2({
+        dropdownParent: ('#exampleModal3 .modal-content'),
+        placeholder:"Quelles sont vos critères ?",
+        width: '100%'
+        // ...
+      });
+
+
+    });
+
+
+
+  });
+
+
+
+  $('body').on('shown.bs.modal', '#exampleModal2', function() {
+    $(this).find('.cat').each(function() {
+      var $select = $(this);
+      $select.select2({
+        dropdownParent: ('#exampleModal2 .modal-content'),
+        placeholder:"Quels types de biens vous recherchez ?",
+        width: '100%',
+        // ...
+      });
+
+
+      var previousSelection = [];
+
+      $select.on('select2:select', function (e) {
+        var data = e.params.data;
+        console.log(data)
+
+        // Si l'option sélectionnée est Maison
+        if (data.text === 'Maison') {
+
+
+          // Select the subcategories
+          var newSelection = ['557', '558', '559'];
+
+          // Ajouter les choix précédents
+          previousSelection.forEach(function(selection) {
+            if (newSelection.indexOf(selection) < 0) {
+              newSelection.push(selection);
+            }
+          });
+
+          // Mettre à jour les choix précédents
+          previousSelection = newSelection.slice();
+
+          $select.val(newSelection).trigger('change.select2');
+        }
+
+        // Si l'option sélectionnée est Appartement
+        if (data.text === 'Appartement') {
+
+          // Select the subcategories
+          var newSelection = ['561','562', '563', '564'];
+
+          // Ajouter les choix précédents
+          previousSelection.forEach(function(selection) {
+            if (newSelection.indexOf(selection) < 0) {
+              newSelection.push(selection);
+            }
+          });
+
+          // Mettre à jour les choix précédents
+          previousSelection = newSelection.slice();
+
+          $select.val(newSelection).trigger('change.select2');
+        }
+      });
+
+      $select.on('select2:unselect', function(e) {
+        var data = e.params.data;
+        var selectionIndex = previousSelection.indexOf(data.id);
+          if (selectionIndex > -1) {
+            previousSelection.splice(selectionIndex, 1);
+          }
+      });
+
+    });
+
+
+  });
+
+
+
+
+
+});
+
+
+
+
+
+</script>
+
+
+
+
+{% endblock %}
+	{% include "_partials/_footer.html.twig" %}
+  </body>
+</html>

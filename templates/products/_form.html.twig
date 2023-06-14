@@ -1,0 +1,56 @@
+
+
+
+{{ form_start(productForm)}}
+
+<h2>Informations générales</h2>
+
+{{form_row(productForm.title)}}
+{{form_row(productForm.price)}}
+{{form_row(productForm.description)}}
+{{form_row(productForm.categories)}}
+{{form_row(productForm.surface)}}
+{{form_row(productForm.rooms)}}
+{{form_row(productForm.bedrooms)}}
+
+<section>
+<h2 class="my-3">Localisation de votre bien</h2>
+    <h3 class="h6 form-text">L'adresse de votre bien ne sera pas transmise aux visiteurs du site</h3>
+
+<div class="row row-cols-1 row-cols-md-2 ">
+    <div class="col">
+    {{form_row(productForm.address)}}
+
+    {{form_row(productForm.zipcode)}}
+    {{form_row(productForm.city)}}
+
+    </div>
+ <!-- Cette DIV affichera la carte -->
+    <div class="col">
+        <h3 class="h6 form-text">Vous pouvez cliquez sur la carte pour géolocaliser votre bien.</h3>
+        <div id="detailsMap"></div>
+    </div>
+</div>
+<section>
+
+<h2 class="my-3">Spécificités du bien</h2>
+{{form_row(productForm.heat)}}
+{{form_row(productForm.floor)}}
+{{form_row(productForm.options)}}
+
+<h2 class="mt-4">Images du bien</h2>
+<h3 class="h5">Vous pouvez déposer jusqu'à 3 images maximum</h3>
+<h6> (Taille maximal : 2 MB par image)</h6>
+{# {{form_row(productForm.images)}} #}
+
+<div id="preview"></div>
+{# {{ form_row(productForm.images, {'attr': {'onchange': 'previewImages()'}}) }}#}
+{{ form_errors(productForm.images) }}
+{{form_row(productForm.images, {'attr': {'accept': 'image/*', 'multiple': true, 'max': 3}})}}
+<button type="button" class="btn btn-secondary" onclick="clearPreviewImages()">Effacer les aperçus</button>
+
+
+<div class="d-flex justify-content-center">
+<button type="submit" class="btn-lg btn-danger my-3 ">Publier mon annonce</button>
+</div>
+{{ form_end(productForm)}}

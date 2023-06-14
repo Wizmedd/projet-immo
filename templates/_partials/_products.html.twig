@@ -1,0 +1,50 @@
+{% for product in products %}
+
+    {% set i = 1 %}
+				{% for ad in products %}
+					{% set url = path('products_details', {'slug': ad.slug }) %}
+				<div class="item js-marker" data-lat="{{ad.latitude}}" data-lng="{{ad.longitude}}" data-price="{{(ad.price // 1000)|number_format(0, '.', ' ')}}" data-rooms="{{ad.rooms}}" data-content="{{ad.description}}" data-link="{{ url }}">
+
+						<div id="carouselExampleIndicators{{i}}" class="carousel slide carousel-fade"  data-bs-touch="false" data-bs-interval="false">
+                    {% if ad.images is not empty %}
+                    <div class="carousel-indicators">
+                        {% for iteration in 1..ad.images|length %}
+                            <button type="button" data-bs-target="#carouselExampleIndicators{{i}}" data-bs-slide-to="{{ iteration - 1 }}" {{ (loop.first ) ?'class="active" aria-current="true"' : '' }} aria-label="Slide {{ iteration }}"></button>
+                        {% endfor %}
+                    </div>
+                    <div class="carousel-inner">
+
+                        {% for image in ad.images %}
+                            <div class="carousel-item {{ (loop.first ) ? 'active' : '' }}" >
+                                <img src="{{ asset(('assets/uploads/') ~ image.name)| imagine_filter('thumb') }}" id="main_product_image" class="rounded-5 " style="height:200px; width:100%"  alt="{{ ad.title }}">
+                            </div>
+                        {% endfor %}
+
+                           </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators{{i}}" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators{{i}}" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+    {% else %}
+
+        <img src="{{ asset('assets/images/wait.jpg') | imagine_filter('thumb') }}"  alt="photo en attente" class="card-img-top rounded-5" style="height:200px; width:100%">
+
+    {% endif %}
+
+
+                </div>
+
+				{#		<img src="/assets/images/les-carmes.jpg" class="rounded-5 shadow-lg" alt="" style="max-height:300px; width:100%; display:block">#}
+						<h4 class="card-title" style="font-size: 1.4rem; line-height: 2rem ;max-height: 4rem;">
+							<a href="{{ url }}" style="text-decoration:none; ">{{ad.categories.name}}, {{ad.surface}} m² </a>
+						</h4>
+
+
+					</div>
+				{% set i = i + 1 %}
+				{% endfor %}
+{%  endfor %}
