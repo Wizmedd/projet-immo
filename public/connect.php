@@ -5,7 +5,7 @@ $password = 'f6clacui03l9lti6';
 
 function testdb_connect($hostname, $username, $password)
 {
-    $db = new PDO("mysql:host=$hostname;dbname=h3kza5sfzo2108lm", $username, $password);
+    $db = new PDO("mysql:host=$hostname;port=3306;dbname=h3kza5sfzo2108lm", $username, $password);
     return $db;
 }
 
